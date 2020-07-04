@@ -57,8 +57,9 @@ EXPOSE 8080
 # Configure a healthcheck to validate that everything is up&running
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
 # Let supervisord start nginx & php-fpm
-ENTRYPOINT ["/usr/bin/supervisord"]
-CMD ["-c", "/etc/supervisor/conf.d/supervisord.conf"]
+COPY config/entrypoint.sh /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 # Copy dummy welcome page
 COPY ./public/ /app/src/
 WORKDIR /app/src/
