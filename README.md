@@ -4,8 +4,10 @@ The recipe provides a very simple yet extensible AIO container that allows for H
 ## Introduction
 Try it out. `docker run -p 8080:8080 markomitranic/sosko-aio-php` Will spawn a little "server" on port 8080 that you can visit.
 
-Generally, it's not meant to be used by itself, but to be extended by other (your) containers. Also here is an example of how we use it.
+Generally, it's not meant to be used by itself, but to be extended by other (your) containers. You will want to `COPY` or set a volume to `/app/src` as it is considered to be the public project root.
 
+## Extending configuration
+Here is an advanced example of how we might use it.
 ```
 FROM markomitranic/sosko-aio-php:7.3 AS base
 
