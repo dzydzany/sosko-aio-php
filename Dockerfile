@@ -18,6 +18,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     libzip-dev \
     libmagickwand-dev libmagickcore-dev \
     libzstd-dev \
+    libcurl4-openssl-dev \
+    pkg-config \
+    libssl-dev \
+    unzip \
+    git \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/*
 
@@ -30,6 +35,7 @@ RUN docker-php-ext-configure gd \
     pdo_mysql \
     exif \
     opcache \
+    intl \
 && yes | pecl install imagick igbinary redis \
 && docker-php-ext-enable imagick igbinary redis opcache \
 && rm -rf /tmp/pear
@@ -41,6 +47,7 @@ COPY config/nginx/default.conf /etc/nginx/conf.d/default.conf
 # Configure PHP-FPM
 COPY config/php/fpm-pool.conf /usr/local/etc/php-fpm.d/www.conf
 COPY config/php/php.ini /usr/local/etc/php/conf.d/custom.ini
+ENV LOG_CHANNEL=stderr
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY config/stop-supervisord.sh /sbin/stop-supervisord.sh
@@ -49,10 +56,9 @@ COPY config/stop-supervisord.sh /sbin/stop-supervisord.sh
 EXPOSE 8080
 # Configure a healthcheck to validate that everything is up&running
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
-# Clear entrypoint so upstream one is not used
-ENTRYPOINT ""
 # Let supervisord start nginx & php-fpm
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
+ENTRYPOINT ["/usr/bin/supervisord"]
+CMD ["-c", "/etc/supervisor/conf.d/supervisord.conf"]
 # Copy dummy welcome page
 COPY ./public/ /app/src/
+WORKDIR /app/src/
