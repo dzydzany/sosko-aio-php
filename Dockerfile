@@ -40,6 +40,10 @@ RUN docker-php-ext-configure gd \
 && docker-php-ext-enable imagick igbinary redis opcache \
 && rm -rf /tmp/pear
 
+# Pre-install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Configure nginx
 RUN rm /etc/nginx/sites-enabled/default
 COPY config/nginx/nginx.conf /etc/nginx/nginx.conf

@@ -24,10 +24,6 @@ RUN yes | pecl install mongodb \
 # Customise or override some of the predefined conf files
 COPY config/php.ini /usr/local/etc/php/conf.d/z-custom.ini
 COPY config/default.conf /etc/nginx/conf.d/default.conf
-
-# Set up a deployment process
-COPY --from=composer:1.9 /usr/bin/composer /usr/bin/composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
 ```
 
 ## XDebug or Blackfire?
