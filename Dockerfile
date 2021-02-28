@@ -26,6 +26,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/*
 
+# Force Imagick from github version until https://pecl.php.net/get/imagick is ready for PHP 8
+RUN mkdir -p /usr/src/php/ext/imagick; \
+    curl -fsSL https://github.com/Imagick/imagick/archive/06116aa24b76edaf6b1693198f79e6c295eda8a9.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1;
 # Activate PHP extensions
 RUN docker-php-ext-configure gd \
 && docker-php-ext-install \
@@ -36,7 +39,8 @@ RUN docker-php-ext-configure gd \
     exif \
     opcache \
     intl \
-&& yes | pecl install imagick igbinary redis \
+    imagick \
+&& yes | pecl install igbinary redis \
 && docker-php-ext-enable imagick igbinary redis opcache \
 && rm -rf /tmp/pear
 

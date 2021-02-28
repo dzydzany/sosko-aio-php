@@ -4,6 +4,17 @@ The recipe provides a very simple yet extensible AIO container that allows for H
 ## Introduction
 Try it out. `docker run -p 8080:8080 markomitranic/sosko-aio-php` Will spawn a little "server" on port 8080 that you can visit.
 
+## One container, one service?
+This needs a long talk. Might be written later on.
+
+FPM running by itself is not HTTP-ready and cannot be used by other services apart from apache or nginx. Also, both of these have mixed responsibilities and need access to same files at same locations. Spooky action at a distance i'd say.
+
+Essentially, while you should always strive towards having a "clear" PHP app that does not deal with any static (non php) files at all. (and thus fully decouple the containers) The usual suspects such as WP or IPS do not like that. In these specific cases, this is the best you've got. 
+
+For now.
+
+# Usage
+
 Generally, it's not meant to be used by itself, but to be extended by other (your) containers. Also here is an example of how we use it.
 
 ```
@@ -47,11 +58,12 @@ RUN if [ "$XDEBUG_ACTIVE" -eq 1 ] ; then \
     ; fi
 ```
 
-# One container, one service?
-This needs a long talk. Might be written later on.
+# Testing
+You should be able to build it locally and spawn it:
+```
+docker build -t sosko-aio-local . --progress=plain
+docker run sosko-aio-local
+```
 
-FPM running by itself is not HTTP-ready and cannot be used by other services apart from apache or nginx. Also, both of these have mixed responsibilities and need access to same files at same locations. Spooky action at a distance i'd say.
-
-Essentially, while you should always strive towards having a "clear" PHP app that does not deal with any static (non php) files at all. (and thus fully decouple the containers) The usual suspects such as WP or IPS do not like that. In these specific cases, this is the best you've got. 
-
-For now.
+# Releases
+Releases happen autoamtically when a new GitHub tag is drafted or an old one is updated. Docker Hub takes case of CI releases.
