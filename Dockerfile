@@ -40,6 +40,7 @@ RUN docker-php-ext-configure gd \
     opcache \
     intl \
     imagick \
+    mbstring \
 && yes | pecl install igbinary redis \
 && docker-php-ext-enable imagick igbinary redis opcache \
 && rm -rf /tmp/pear
