@@ -19,6 +19,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-ins
     libmagickwand-dev libmagickcore-dev \
     libzstd-dev \
     libcurl4-openssl-dev \
+    libonig-dev \
     pkg-config \
     libssl-dev \
     unzip \
